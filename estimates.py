@@ -5,7 +5,6 @@ def create_estimate(
     materials_cost: float,
     works_cost: float,
 ) -> None:
-    """Создать смету для помещения."""
     estimate_id = max((e["id"] for e in estimates), default=0) + 1
     total = round(materials_cost + works_cost, 2)
     estimates.append({
@@ -19,7 +18,6 @@ def create_estimate(
 
 
 def check_budget(budget: float, total_cost: float) -> dict:
-    """Проверить достаточность бюджета."""
     if budget >= total_cost:
         return {
             "is_sufficient": True,
@@ -38,5 +36,4 @@ def check_budget(budget: float, total_cost: float) -> dict:
 
 
 def get_total_estimates(estimates: list[dict]) -> float:
-    """Рассчитать общую стоимость всех смет."""
     return round(sum(e["total"] for e in estimates), 2)
