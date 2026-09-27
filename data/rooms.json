@@ -12,5 +12,12 @@
     "length": 10.0,
     "width": 5.0,
     "height": 3.0
+  },
+  {
+    "id": 3,
+    "name": "nefktn",
+    "length": 2.0,
+    "width": 2.0,
+    "height": 3.0
   }
 ]

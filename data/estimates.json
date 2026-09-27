@@ -1,10 +1,10 @@
 [
   {
     "id": 1,
-    "room_id": 1,
-    "room_name": "гостинная",
-    "materials_cost": 100.0,
-    "works_cost": 500.0,
-    "total": 600.0
+    "room_id": 2,
+    "user_id": 1,
+    "materials_cost": 300.0,
+    "works_cost": 10000.0,
+    "total": 10300.0
   }
 ]
