@@ -1,20 +1,10 @@
-from rooms import (
-    add_room,
-    calculate_room_area,
-    calculate_wall_area,
-    sort_rooms_by_area,
+from typing import List
+from models import Room, Material, Estimate
+from storage import (
+    load_rooms, save_rooms,
+    load_materials, save_materials,
+    load_estimates, save_estimates,
 )
-from materials import (
-    add_material,
-    calculate_quantity,
-    calculate_material_cost,
-)
-from estimates import (
-    create_estimate,
-    check_budget,
-    get_total_estimates,
-)
-from storage import load_data, save_data
 from utils import input_int, input_positive_float
 
 DATA_DIR = "data"
@@ -36,107 +26,97 @@ def show_menu() -> None:
     print("0. Выход")
 
 
-def show_rooms_menu(rooms: list) -> None:
+def show_rooms_menu(rooms: List[Room]) -> None:
     """Показать список помещений."""
-    for room in sort_rooms_by_area(rooms):
-        area = calculate_room_area(room["length"], room["width"])
-        print(f"  [{room['id']}] {room['name']} — {area} кв.м")
+    sorted_rooms = sorted(rooms, key=lambda r: r.calculate_floor_area())
+    for room in sorted_rooms:
+        print(room)
 
 
-def add_room_menu(rooms: list) -> None:
+def add_room_menu(rooms: List[Room]) -> None:
     """Добавить новое помещение."""
     name = input("Название помещения: ")
     length = input_positive_float("Длина (м): ")
     width = input_positive_float("Ширина (м): ")
     height = input_positive_float("Высота (м): ")
-    add_room(rooms, name, length, width, height)
-    save_data(ROOMS_FILE, rooms)
-    print("Помещение добавлено.")
+    room_id = max((r.id for r in rooms), default=0) + 1
+    room = Room(room_id, name, length, width, height)
+    rooms.append(room)
+    save_rooms(ROOMS_FILE, rooms)
+    print(f"Помещение добавлено: {room}")
 
 
-def show_materials_menu(materials: list) -> None:
+def show_materials_menu(materials: List[Material]) -> None:
     """Показать список материалов."""
     for material in materials:
-        print(
-            f"  [{material['id']}] {material['name']} — "
-            f"{material['price']} руб./{material['unit']}"
-        )
+        print(material)
 
 
-def add_material_menu(materials: list) -> None:
+def add_material_menu(materials: List[Material]) -> None:
     """Добавить новый материал."""
     name = input("Название материала: ")
     unit = input("Единица измерения: ")
     price = input_positive_float("Цена за единицу: ")
     coverage = input_positive_float("Покрываемая площадь: ")
-    add_material(materials, name, unit, price, coverage)
-    save_data(MATERIALS_FILE, materials)
-    print("Материал добавлен.")
+    material_id = max((m.id for m in materials), default=0) + 1
+    material = Material(material_id, name, unit, price, coverage)
+    materials.append(material)
+    save_materials(MATERIALS_FILE, materials)
+    print(f"Материал добавлен: {material}")
 
 
 def estimate_menu(
-    rooms: list,
-    materials: list,
-    estimates: list,
+    rooms: List[Room],
+    materials: List[Material],
+    estimates: List[Estimate],
 ) -> None:
     """Рассчитать смету для помещения."""
     if not rooms or not materials:
         print("Сначала добавьте помещения и материалы.")
         return
     room_id = input_int("ID помещения: ")
-    wall_area = 0
-    room_name = ""
-    for room in rooms:
-        if room["id"] == room_id:
-            wall_area = calculate_wall_area(
-                room["length"], room["width"], room["height"],
-            )
-            room_name = room["name"]
-            break
-    if wall_area == 0:
+    room = next((r for r in rooms if r.id == room_id), None)
+    if not room:
         print("Помещение не найдено.")
         return
 
+    wall_area = room.calculate_wall_area()
     materials_cost = 0
     for material in materials:
-        quantity = calculate_quantity(wall_area, material["coverage"])
-        cost = calculate_material_cost(quantity, material["price"])
+        quantity = material.calculate_quantity(wall_area)
+        cost = material.calculate_cost(quantity)
         materials_cost += cost
-        print(
-            f"  {material['name']}: "
-            f"{quantity} {material['unit']} = {cost} руб."
-        )
+        print(f"  {material.name}: {quantity} {material.unit} = {cost} руб.")
 
     works_cost = input_positive_float("Стоимость работ: ")
-    create_estimate(
-        estimates, room_id, room_name, materials_cost, works_cost,
-    )
-    save_data(ESTIMATES_FILE, estimates)
-    print(f"Смета создана. Итого материалов: {materials_cost} руб.")
+    estimate_id = max((e.id for e in estimates), default=0) + 1
+    estimate = Estimate(estimate_id, room, materials_cost, works_cost)
+    estimates.append(estimate)
+    save_estimates(ESTIMATES_FILE, estimates)
+    print(f"Смета создана: {estimate}")
 
 
-def show_estimates_menu(estimates: list) -> None:
+def show_estimates_menu(estimates: List[Estimate]) -> None:
     """Показать все сметы."""
     for estimate in estimates:
-        print(
-            f"  [{estimate['id']}] {estimate['room_name']}: "
-            f"{estimate['total']} руб."
-        )
+        print(estimate)
 
 
-def budget_menu(estimates: list) -> None:
+def budget_menu(estimates: List[Estimate]) -> None:
     """Проверить общий бюджет."""
-    total = get_total_estimates(estimates)
+    total = sum(e.total for e in estimates)
     budget = input_positive_float("Ваш бюджет: ")
-    result = check_budget(budget, total)
-    print(result["message"])
+    if budget >= total:
+        print(f"Бюджет достаточен. Остаток: {round(budget - total, 2)} руб.")
+    else:
+        print(f"Недостаточно средств. Не хватает: {round(total - budget, 2)} руб.")
 
 
 def main() -> None:
     """Точка запуска приложения."""
-    rooms = load_data(ROOMS_FILE)
-    materials = load_data(MATERIALS_FILE)
-    estimates = load_data(ESTIMATES_FILE)
+    rooms = load_rooms(ROOMS_FILE)
+    materials = load_materials(MATERIALS_FILE)
+    estimates = load_estimates(ESTIMATES_FILE, rooms)
 
     while True:
         show_menu()
