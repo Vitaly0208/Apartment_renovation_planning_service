@@ -125,7 +125,7 @@ def estimate_menu(
     works_cost = input_positive_float("Стоимость работ: ")
     estimate_id = max((e.id for e in estimates), default=0) + 1
     estimate = Estimate(
-        estimate_id, room, user, materials_cost, works_cost,
+        estimate_id, room, user, materials, works_cost,
     )
     estimates.append(estimate)
     save_estimates(ESTIMATES_FILE, estimates)
@@ -180,7 +180,7 @@ def main() -> None:
     rooms = load_rooms(ROOMS_FILE)
     materials = load_materials(MATERIALS_FILE)
     users = load_users(USERS_FILE)
-    estimates = load_estimates(ESTIMATES_FILE, rooms, users)
+    estimates = load_estimates(ESTIMATES_FILE, rooms, users, materials)
 
     while True:
         show_menu()

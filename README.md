@@ -57,15 +57,83 @@
 - `check_budget()` — проверка достаточности бюджета;
 - `__str__()` — строковое представление.
 
+## Веб-интерфейс (ПР5)
+Проект дополнен веб-приложением на Django 5.2.
+- `/` – главная страница.
+- `/rooms/` – список помещений (данные из `data/rooms.json`).
+- `/rooms/<id>/` – детальная информация о помещении.
+- `/estimates/` – список смет с прямым отображением объектов `Material` и `User`.
+- `/estimates/<id>/` – детальная страница сметы.
+
+### Запуск веб-версии
+```bash
+python manage.py runserver
+
 ## Структура проекта
+
 ```text
 Apartment_renovation_planning_service/
 ├── main.py
-├── models/
-│   ├── rooms.py
-│   ├── materials.py
-│   └── estimates.py
+├── manage.py 
+├── requirements.txt 
+├── README.md 
+├── .gitignore 
+├── .flake8 
+│
+├── apartment_renovation/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+│
+├── homepage/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── views.py
+│   └── urls.py
+│
+├── rooms/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── views.py
+│   └── urls.py   
+│
+├── estimates/   
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py  
+│   ├── tests.py
+│   ├── views.py    
+│   └── urls.py 
+│
+── models/      
+│   ├── __init__.py    
+│   ├── rooms.py 
+│   ├── materials.py 
+│   ├── users.py  
+│   └── estimates.py 
+│
 ├── storage.py
-├── utils.py
-├── data/
-└── tests/
+├── utils.py   
+│
+├── data/             
+│   ├── rooms.json       
+│   ├── materials.json 
+│   ├── users.json   
+│   └── estimates.json 
+│
+└── tests/                      
+    ├── test_rooms.py            
+    ├── test_materials.py 
+    ├── test_users.py   
+    └── test_estimates.py
+
+

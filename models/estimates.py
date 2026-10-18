@@ -3,6 +3,7 @@ from .rooms import Room
 from .users import User
 from .materials import Material
 
+
 class Estimate:
     def __init__(
         self,
@@ -24,16 +25,21 @@ class Estimate:
         if budget >= self.total:
             return {
                 "is_sufficient": True,
-                "message": f"Бюджет достаточен. Остаток: {round(budget - self.total, 2)} руб.",
+                "message": f"Бюджет достаточен. "
+                           f"Остаток: {round(budget - self.total, 2)} руб.",
             }
         return {
             "is_sufficient": False,
-            "message": f"Недостаточно средств. Не хватает: {round(self.total - budget, 2)} руб.",
+            "message": f"Недостаточно средств. "
+                       f"Не хватает: {round(self.total - budget, 2)} руб.",
         }
 
     @classmethod
-    def from_data(cls, data: dict, room: Room, user: User, all_materials: List[Material]) -> "Estimate":
-        """Создать смету из словаря, восстанавливая объекты материалов по их ID."""
+    def from_data(cls, data: dict,
+                  room: Room,
+                  user: User,
+                  all_materials: List[Material]) \
+            -> "Estimate":
         materials_in_estimate = [
             m for m in all_materials if m.id in data["material_ids"]
         ]
@@ -51,7 +57,7 @@ class Estimate:
             "id": self.id,
             "room_id": self.room.id,
             "user_id": self.user.id,
-            "material_ids": [m.id for m in self.materials], # Сохраняем только ID
+            "material_ids": [m.id for m in self.materials],
             "works_cost": self.works_cost,
             "total": self.total,
         }

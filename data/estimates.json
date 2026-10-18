@@ -1,10 +1,13 @@
 [
   {
     "id": 1,
-    "room_id": 2,
+    "room_id": 1,
     "user_id": 1,
-    "materials_cost": 300.0,
-    "works_cost": 10000.0,
-    "total": 10300.0
+    "material_ids": [
+      1,
+      2
+    ],
+    "works_cost": 500.0,
+    "total": 700.0
   }
 ]

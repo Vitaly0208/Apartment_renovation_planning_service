@@ -1,4 +1,7 @@
-﻿class User:
+﻿from typing import Optional, List
+
+
+class User:
     """Пользователь системы (заказчик ремонта)."""
 
     def __init__(
@@ -36,3 +39,11 @@
     def __str__(self) -> str:
         """Строковое представление пользователя."""
         return f"[{self.id}] {self.name} ({self.phone})"
+
+
+def find_user_by_id(users: List[User], user_id: int) -> Optional[User]:
+    """Найти пользователя по идентификатору."""
+    for user in users:
+        if user.id == user_id:
+            return user
+    return None

@@ -7,3 +7,5 @@ exclude =
     data,
     tests
 max-line-length = 88
+per-file-ignores =
+    apartment_renovation/settings.py: E501

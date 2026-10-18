@@ -1,4 +1,7 @@
-﻿class Room:
+﻿from typing import Optional, List
+
+
+class Room:
     """Помещение для ремонта."""
 
     def __init__(
@@ -54,3 +57,11 @@
         """Строковое представление помещения."""
         area = self.calculate_floor_area()
         return f"[{self.id}] {self.name} — {area} кв.м"
+
+
+def find_room_by_id(rooms: List[Room], room_id: int) -> Optional[Room]:
+    """Найти помещение по идентификатору."""
+    for room in rooms:
+        if room.id == room_id:
+            return room
+    return None
