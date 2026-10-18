@@ -65,16 +65,23 @@ def load_estimates(
     filename: str,
     rooms: List[Room],
     users: List[User],
+    materials: List[Material],
 ) -> List[Estimate]:
-    """Загрузить сметы из JSON-файла."""
-    data = _load_json(filename)
-    estimates = []
-    for item in data:
-        room = next((r for r in rooms if r.id == item["room_id"]), None)
-        user = next((u for u in users if u.id == item["user_id"]), None)
-        if room and user:
-            estimates.append(Estimate.from_data(item, room, user))
-    return estimates
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            data = json.load(file)
+            estimates = []
+            for item in data:
+                room = next((r for r in rooms if r.id == item["room_id"]), None)
+                user = next((u for u in users if u.id == item["user_id"]), None)
+                if room and user:
+                    estimates.append(Estimate.from_data(item, room, user, materials))
+            return estimates
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError as error:
+        print(f"Ошибка чтения JSON: {error}")
+        return []
 
 
 def save_estimates(filename: str, estimates: List[Estimate]) -> None:
