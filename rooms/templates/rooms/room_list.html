@@ -5,8 +5,22 @@
 {% block content %}
 <h1>Помещения</h1>
 <p>Всего помещений: {{ rooms|length }}</p>
+
 {% for room in rooms %}
-    {% include "rooms/includes/room_card.html" %}
+    <article class="card room-card mb-3">
+        <div class="card-body">
+            <!-- Теперь используем room.name, room.floor_area -->
+            <h2 class="card-title">{{ room.name }}</h2>
+            <p class="card-text">
+                Площадь пола: {{ room.floor_area }} кв.м
+            </p>
+            <p class="card-text">
+                Площадь стен: {{ room.wall_area }} кв.м
+            </p>
+            <a href="{% url 'rooms:room_detail' room.id %}"
+               class="btn btn-primary">Подробнее</a>
+        </div>
+    </article>
 {% empty %}
     <p class="text-muted">Помещения не найдены.</p>
 {% endfor %}

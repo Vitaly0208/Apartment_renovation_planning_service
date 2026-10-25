@@ -3,7 +3,9 @@
         <a class="navbar-brand" href="{% url 'homepage:index' %}">РемонтПлан</a>
         <div class="navbar-nav">
             <a class="nav-link" href="{% url 'rooms:rooms_list' %}">Помещения</a>
+            <a class="nav-link" href="{% url 'rooms:available' %}">Поиск</a>
             <a class="nav-link" href="{% url 'estimates:estimates_list' %}">Сметы</a>
+            <a class="nav-link" href="{% url 'estimates:statistics' %}">Статистика</a>
         </div>
     </div>
 </nav>

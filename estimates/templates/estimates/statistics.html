@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Статистика – РемонтПлан{% endblock %}
+
+{% block content %}
+<h1>Статистика смет</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Пользователь</th>
+            <th>Количество смет</th>
+            <th>Общая сумма</th>
+            <th>Средняя стоимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in stats %}
+        <tr>
+            <td>{{ item.user_name }}</td>
+            <td>{{ item.estimates_count }}</td>
+            <td>{{ item.total_spent }} руб.</td>
+            <td>{{ item.avg_cost }} руб.</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-muted">Данные отсутствуют.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Поиск помещений – РемонтПлан{% endblock %}
+
+{% block content %}
+<h1>Поиск помещений</h1>
+<form method="get">
+    <label for="min_area">Минимальная площадь (кв.м):</label>
+    <input type="number" step="0.01" id="min_area" name="min_area"
+           value="{{ min_area }}">
+    <button type="submit" class="btn btn-primary">Найти</button>
+</form>
+
+{% if min_area %}
+<h2>Результаты поиска (площадь ≥ {{ min_area }} кв.м)</h2>
+{% for room in rooms %}
+<article class="card room-card mb-3">
+    <div class="card-body">
+        <h3 class="card-title">{{ room.name }}</h3>
+        <p class="card-text">Площадь: {{ room.floor_area }} кв.м</p>
+        <p class="card-text">Размеры: {{ room.length }} × {{ room.width }} × {{ room.height }} м</p>
+    </div>
+</article>
+{% empty %}
+    <p class="text-muted">Помещений с такой площадью не найдено.</p>
+{% endfor %}
+{% endif %}
+{% endblock %}

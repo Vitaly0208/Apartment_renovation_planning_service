@@ -65,6 +65,18 @@
 - `/estimates/` – список смет с прямым отображением объектов `Material` и `User`.
 - `/estimates/<id>/` – детальная страница сметы.
 
+## База данных (ПР7)
+
+На ПР7 данные перенесены из JSON-файлов в базу данных SQLite:
+- создана база `data/renovation.sqlite`;
+- таблицы созданы через `sql/schema.sql`;
+- данные импортированы скриптом `db/import_json.py`;
+- SQL-запросы сохранены в `sql/queries.sql`;
+- Django-представления получают данные из SQLite через `sqlite3`;
+- страницы списка помещений, деталей, поиска и статистики работают с БД.
+
+На следующих практических работах база данных будет подключена через Django ORM.
+
 ### Запуск веб-версии
 ```bash
 python manage.py runserver
@@ -74,66 +86,76 @@ python manage.py runserver
 ```text
 Apartment_renovation_planning_service/
 ├── main.py
-├── manage.py 
-├── requirements.txt 
-├── README.md 
-├── .gitignore 
-├── .flake8 
+├── manage.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+── .flake8
 │
 ├── apartment_renovation/
-│   ├── __init__.py
-│   ├── settings.py
-│   ├── urls.py
-│   ├── asgi.py
-│   └── wsgi.py
+│ ├── init.py
+│ ├── settings.py
+│ ├── urls.py
+│ ├── asgi.py
+│ └── wsgi.py
 │
 ├── homepage/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── tests.py
-│   ├── views.py
-│   └── urls.py
+│ ├── init.py
+│ ├── admin.py
+│ ├── apps.py
+│ ├── models.py
+│ ├── tests.py
+│ ├── views.py
+│ └── urls.py
 │
 ├── rooms/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── tests.py
-│   ├── views.py
-│   └── urls.py   
+│ ├── init.py
+│ ├── admin.py
+│ ├── apps.py
+│ ├── models.py
+│ ├── tests.py
+│ ├── views.py
+│ └── urls.py
 │
-├── estimates/   
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py  
-│   ├── tests.py
-│   ├── views.py    
-│   └── urls.py 
+├── estimates/
+│ ├── init.py
+│ ├── admin.py
+│ ├── apps.py
+│ ├── models.py
+│ ├── tests.py
+│ ├── views.py
+│ └── urls.py
 │
-── models/      
-│   ├── __init__.py    
-│   ├── rooms.py 
-│   ├── materials.py 
-│   ├── users.py  
-│   └── estimates.py 
+├── db/
+│ ├── init.py
+│ ├── database.py
+│ └── import_json.py
+│
+├── sql/
+│ ├── schema.sql
+│ └── queries.sql
+│
+├── models/
+│ ├── init.py
+│ ├── rooms.py
+│ ├── materials.py
+│ ├── users.py
+│ └── estimates.py
 │
 ├── storage.py
-├── utils.py   
+├── utils.py
 │
-├── data/             
-│   ├── rooms.json       
-│   ├── materials.json 
-│   ├── users.json   
-│   └── estimates.json 
+├── data/
+│ ├── renovation.sqlite
+│ ├── rooms.json
+│ ├── materials.json
+│ ├── users.json
+│ └── estimates.json
 │
-└── tests/                      
-    ├── test_rooms.py            
-    ├── test_materials.py 
-    ├── test_users.py   
-    └── test_estimates.py
+└── tests/
+├── test_rooms.py
+├── test_materials.py
+├── test_users.py
+── test_estimates.py
 
 
