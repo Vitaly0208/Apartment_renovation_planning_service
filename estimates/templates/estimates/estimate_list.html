@@ -1,0 +1,13 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Сметы – РемонтПлан{% endblock %}
+
+{% block content %}
+<h1>Сметы</h1>
+<p>Всего смет: {{ estimates|length }}</p>
+{% for estimate in estimates %}
+    {% include "estimates/includes/estimate_status.html" %}
+{% empty %}
+    <p class="text-muted">Смет пока нет.</p>
+{% endfor %}
+{% endblock %}

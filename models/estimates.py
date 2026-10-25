@@ -1,4 +1,4 @@
-﻿from typing import List
+﻿from typing import List, Optional
 from .rooms import Room
 from .users import User
 from .materials import Material
@@ -69,3 +69,14 @@ class Estimate:
             f"материалы ({materials_names}) = {self.materials_cost} руб. + "
             f"работы = {self.works_cost} руб. | Итого: {self.total} руб."
         )
+
+
+def find_estimate_by_id(
+    estimates: List[Estimate],
+    estimate_id: int,
+) -> Optional[Estimate]:
+    """Найти смету по идентификатору."""
+    for estimate in estimates:
+        if estimate.id == estimate_id:
+            return estimate
+    return None

@@ -1,0 +1,11 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная – РемонтПлан{% endblock %}
+
+{% block content %}
+<h1 class="display-4">РемонтПлан</h1>
+<p class="lead">Сервис планирования ремонта квартиры.</p>
+<p>Основные разделы:</p>
+<a href="{% url 'rooms:rooms_list' %}" class="btn btn-primary me-2">Помещения</a>
+<a href="{% url 'estimates:estimates_list' %}" class="btn btn-secondary">Сметы</a>
+{% endblock %}

@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+    {% if room %}{{ room.name }} – РемонтПлан{% else %}Помещение не найдено{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if room %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">{{ room.name }}</h1>
+        <p class="card-text"><strong>ID:</strong> {{ room.id }}</p>
+        <p class="card-text">
+            <strong>Площадь пола:</strong> {{ room.calculate_floor_area }} кв.м
+        </p>
+        <p class="card-text">
+            <strong>Площадь стен:</strong> {{ room.calculate_wall_area }} кв.м
+        </p>
+    </div>
+</div>
+{% else %}
+    <h1 class="text-danger">Помещение не найдено</h1>
+    <p>Помещение с указанным идентификатором отсутствует.</p>
+{% endif %}
+<a href="{% url 'rooms:rooms_list' %}" class="btn btn-outline-secondary mt-3">
+    ← к списку помещений
+</a>
+{% endblock %}

@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+    {% if estimate %}Смета №{{ estimate.id }} – РемонтПлан{% else %}Смета не найдена{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if estimate %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">Смета №{{ estimate.id }}</h1>
+        <p class="card-text"><strong>Заказчик:</strong> {{ estimate.user.name }}</p>
+        <p class="card-text"><strong>Помещение:</strong> {{ estimate.room.name }}</p>
+        <p class="card-text">
+            <strong>Материалы:</strong><br>
+            {% for material in estimate.materials %}
+                • {{ material.name|default:"Без названия" }}<br>
+            {% empty %}
+                материалы не указаны
+            {% endfor %}
+        </p>
+        <p class="card-text">
+            <strong>Стоимость материалов:</strong> {{ estimate.materials_cost }} руб.
+        </p>
+        <p class="card-text">
+            <strong>Стоимость работ:</strong> {{ estimate.works_cost }} руб.
+        </p>
+        <h4 class="text-success">Итого: {{ estimate.total }} руб.</h4>
+    </div>
+</div>
+{% else %}
+    <h1 class="text-danger">Смета не найдена</h1>
+    <p>Смета с указанным идентификатором отсутствует.</p>
+{% endif %}
+<a href="{% url 'estimates:estimates_list' %}" class="btn btn-outline-secondary mt-3">
+    ← к списку смет
+</a>
+{% endblock %}
