@@ -1,10 +1,10 @@
-   venv/
-   __pycache__/
-   .idea/
-   *.pyc
-   .venv/
-   .pytest_cache/
-   tmp/
-   *.sqlite3
-   *.sqlite3-journal
-   *.sqlite-journal
+.venv/
+venv/
+__pycache__/
+.idea/
+.pytest_cache/
+*.pyc
+tmp/
+*.sqlite3
+*.sqlite3-journal
+*.sqlite-journal
