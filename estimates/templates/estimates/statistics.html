@@ -4,6 +4,10 @@
 
 {% block content %}
 <h1>Статистика смет</h1>
+<p>Всего: {{ summary.count }}. Сумма: {{ summary.total_sum|floatformat:2 }} руб.
+Средняя: {{ summary.average|floatformat:2 }} руб.
+Минимум: {{ summary.minimum|default_if_none:"—" }}.
+Максимум: {{ summary.maximum|default_if_none:"—" }}.</p>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -26,4 +30,12 @@
         {% endfor %}
     </tbody>
 </table>
+<h2>По помещениям</h2>
+{% for room in room_stats %}
+<p>{{ room.name }}: {{ room.estimates_count }} смет, {{ room.total_spent }} руб.</p>
+{% empty %}<p>Нет помещений.</p>{% endfor %}
+<h2>Использование материалов</h2>
+{% for material in material_stats %}
+<p>{{ material.name }}: {{ material.estimates_count }} смет.</p>
+{% empty %}<p>Нет материалов.</p>{% endfor %}
 {% endblock %}

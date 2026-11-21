@@ -18,6 +18,11 @@
         </p>
     </div>
 </div>
+<h2>Сметы помещения</h2>
+{% for estimate in estimates %}
+<p><a href="{% url 'estimates:estimate_detail' estimate.pk %}">Смета №{{ estimate.pk }}</a>:
+{{ estimate.user.name }} — {{ estimate.total }} руб.</p>
+{% empty %}<p>Смет пока нет.</p>{% endfor %}
 {% else %}
     <h1 class="text-danger">Помещение не найдено</h1>
     <p>Помещение с указанным идентификатором отсутствует.</p>

@@ -1,65 +1,45 @@
-from django.shortcuts import render
-import sqlite3
+from django.db.models import F
+from django.shortcuts import get_object_or_404, render
 
-DB_PATH = "data/renovation.sqlite"
+from .forms import RoomSearchForm
+from .models import Room
+
+
+def room_queryset(request):
+    form = RoomSearchForm(request.GET)
+    rooms = Room.objects.all()
+    if form.is_valid():
+        data = form.cleaned_data
+        if data["q"]:
+            rooms = rooms.filter(name__icontains=data["q"])
+        if data["min_area"] is not None:
+            rooms = rooms.alias(area=F("length") * F("width")).filter(
+                area__gte=data["min_area"])
+        area = F("length") * F("width")
+        sorting = {"name": ("name", "pk"), "area": (area, "pk"),
+                   "-area": (area.desc(), "pk")}
+        rooms = rooms.order_by(*sorting.get(data["sort"], sorting["name"]))
+    else:
+        rooms = rooms.none()
+    return form, rooms
 
 
 def rooms_list(request):
-    """Список помещений из базы данных."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    rooms = conn.execute(
-        """
-        SELECT id, name, length, width, height
-        FROM rooms
-        ORDER BY name;
-        """
-    ).fetchall()
-    conn.close()
-
-    context = {"rooms": rooms}
-    return render(request, "rooms/room_list.html", context)
+    form, rooms = room_queryset(request)
+    return render(request, "rooms/room_list.html", {"rooms": rooms, "form": form})
 
 
-def room_detail(request, room_id: int):
-    """Детальная страница помещения из базы данных."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    room = conn.execute(
-        """
-        SELECT id, name, length, width, height,
-               ROUND(length * width, 2) AS floor_area,
-               ROUND(2 * (length + width) * height, 2) AS wall_area
-        FROM rooms
-        WHERE id = ?;
-        """,
-        (room_id,),
-    ).fetchone()
-    conn.close()
-
-    context = {"room": room}
-    status = 404 if room is None else 200
-    return render(request, "rooms/room_detail.html", context, status=status)
+def room_detail(request, room_id):
+    room = get_object_or_404(Room, pk=room_id)
+    return render(request, "rooms/room_detail.html", {
+        "room": room, "estimates": room.estimates.select_related("user"),
+    })
 
 
 def available_rooms(request):
-    """Поиск помещений по критерию (например, площадь > N)."""
-    min_area = request.GET.get("min_area")
-    rooms = []
-    if min_area:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        rooms = conn.execute(
-            """
-            SELECT id, name, length, width, height,
-                   ROUND(length * width, 2) AS floor_area
-            FROM rooms
-            WHERE (length * width) >= ?
-            ORDER BY name;
-            """,
-            (float(min_area),),
-        ).fetchall()
-        conn.close()
-
-    context = {"rooms": rooms, "min_area": min_area}
-    return render(request, "rooms/available.html", context)
+    form, rooms = room_queryset(request)
+    if not request.GET:
+        rooms = rooms.none()
+    return render(request, "rooms/available.html", {
+        "rooms": rooms, "form": form, "searched": bool(request.GET),
+    })

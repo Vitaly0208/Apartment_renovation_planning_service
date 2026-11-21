@@ -2,3 +2,9 @@
    __pycache__/
    .idea/
    *.pyc
+   .venv/
+   .pytest_cache/
+   tmp/
+   *.sqlite3
+   *.sqlite3-journal
+   *.sqlite-journal
