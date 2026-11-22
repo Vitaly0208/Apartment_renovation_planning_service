@@ -4,6 +4,8 @@
 
 {% block content %}
 <h1>Статистика смет</h1>
+<p>Черновики: {{ summary.draft }}. Согласованы: {{ summary.active }}.
+Отменены: {{ summary.cancelled }}. Выполнены: {{ summary.completed }}.</p>
 <p>Всего: {{ summary.count }}. Сумма: {{ summary.total_sum|floatformat:2 }} руб.
 Средняя: {{ summary.average|floatformat:2 }} руб.
 Минимум: {{ summary.minimum|default_if_none:"—" }}.

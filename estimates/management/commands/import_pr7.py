@@ -45,7 +45,8 @@ class Command(BaseCommand):
                 for row in tables[name]:
                     pk = row.pop("id")
                     for field in model._meta.fields:
-                        if field.get_internal_type() == "DecimalField":
+                        if (field.name in row and not field.generated
+                                and field.get_internal_type() == "DecimalField"):
                             row[field.name] = Decimal(str(row[field.name]))
                     if model is Estimate:
                         if not Room.objects.filter(pk=row["room_id"]).exists():

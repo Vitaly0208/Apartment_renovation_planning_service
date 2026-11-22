@@ -12,6 +12,16 @@ def estimates_list(request):
     estimates = Estimate.objects.all()
     if form.is_valid():
         data = form.cleaned_data
+        if data["date"]:
+            estimates = estimates.for_date(data["date"])
+        status_methods = {
+            Estimate.Status.ACTIVE: "active", Estimate.Status.CANCELLED: "cancelled",
+            Estimate.Status.COMPLETED: "completed",
+        }
+        if data["status"] in status_methods:
+            estimates = getattr(estimates, status_methods[data["status"]])()
+        elif data["status"]:
+            estimates = estimates.filter(status=data["status"])
         if data["room"]:
             estimates = estimates.filter(room=data["room"])
         if data["user"]:
@@ -33,11 +43,12 @@ def estimates_list(request):
     else:
         estimates = estimates.none()
     estimates = estimates.values(
-        "id", "materials_cost", "works_cost", "total",
+        "id", "materials_cost", "works_cost", "total", "status", "estimate_date",
     ).annotate(room_name=F("room__name"), user_name=F("user__name"))
     page_obj = Paginator(estimates, 5).get_page(request.GET.get("page"))
     return render(request, "estimates/estimate_list.html", {
         "estimates": page_obj, "page_obj": page_obj, "form": form,
+        "status_labels": dict(Estimate.Status.choices),
     })
 
 
@@ -56,7 +67,12 @@ def statistics(request):
         avg_cost=Avg("estimates__total", default=0),
     ).order_by("-total_spent", "name", "pk")
     summary = Estimate.objects.aggregate(
-        count=Count("pk"), total_sum=Sum("total", default=0),
+        count=Count("pk"),
+        draft=Count("pk", filter=Q(status=Estimate.Status.DRAFT)),
+        active=Count("pk", filter=Q(status=Estimate.Status.ACTIVE)),
+        cancelled=Count("pk", filter=Q(status=Estimate.Status.CANCELLED)),
+        completed=Count("pk", filter=Q(status=Estimate.Status.COMPLETED)),
+        total_sum=Sum("total", default=0),
         average=Avg("total", default=0), minimum=Min("total"), maximum=Max("total"),
     )
     rooms = Room.objects.annotate(

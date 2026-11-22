@@ -1,10 +1,14 @@
 from django import forms
 
 from rooms.models import Room
-from .models import User
+from .models import Estimate, User
 
 
 class EstimateFilterForm(forms.Form):
+    status = forms.ChoiceField(required=False, label="Статус",
+                               choices=[("", "Все")] + Estimate.Status.choices)
+    date = forms.DateField(required=False, label="Дата сметы",
+                           widget=forms.DateInput(attrs={"type": "date"}))
     q = forms.CharField(required=False, max_length=200, label="Поиск")
     room = forms.ModelChoiceField(
         queryset=Room.objects.all(), required=False, label="Помещение")
@@ -28,4 +32,18 @@ class EstimateFilterForm(forms.Form):
         low, high = data.get("min_total"), data.get("max_total")
         if low is not None and high is not None and low > high:
             raise forms.ValidationError("Нижняя граница стоимости превышает верхнюю.")
+        return data
+
+
+class EstimateAdminForm(forms.ModelForm):
+    class Meta:
+        model = Estimate
+        fields = "__all__"
+
+    def clean(self):
+        data = super().clean()
+        materials = data.get("materials_cost")
+        works = data.get("works_cost")
+        if materials is not None and works is not None:
+            self.instance.total = materials + works
         return data

@@ -73,7 +73,8 @@ class ORMTests(TestCase):
         self.assertContains(response, "20")
         self.assertContains(response, "54")
         first = Estimate.objects.first()
-        with self.assertNumQueries(2):
+        # JOIN + prefetch материалов + счётчик контекстного процессора ПР10.
+        with self.assertNumQueries(3):
             response = self.client.get(f"/estimates/{first.pk}/")
         self.assertContains(response, "Alice")
         self.assertContains(response, "Kitchen")

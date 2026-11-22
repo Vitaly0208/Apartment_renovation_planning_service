@@ -9,7 +9,7 @@
         <p class="card-text">
             Площадь стен: {{ room.calculate_wall_area }} кв.м
         </p>
-        <a href="{% url 'rooms:room_detail' room.id %}"
+        <a href="{{ room.get_absolute_url }}"
            class="btn btn-primary">
             Подробнее
         </a>

@@ -3,6 +3,7 @@ exclude =
     .venv,
     venv,
     .git,
+    tmp,
     __pycache__,
     data,
     tests

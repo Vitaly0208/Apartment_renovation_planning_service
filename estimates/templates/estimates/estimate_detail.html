@@ -9,6 +9,8 @@
 <div class="card">
     <div class="card-body">
         <h1 class="card-title">Смета №{{ estimate.id }}</h1>
+        <p>Статус: {{ estimate.get_status_display }}.
+        Дата сметы: {{ estimate.estimate_date|default_if_none:"не указана" }}.</p>
         <p class="card-text"><strong>Заказчик:</strong> {{ estimate.user.name }}</p>
         <p class="card-text"><strong>Телефон:</strong> {{ estimate.user.phone }}</p>
         <p class="card-text"><strong>Email:</strong> {{ estimate.user.email }}</p>

@@ -43,3 +43,10 @@ def available_rooms(request):
     return render(request, "rooms/available.html", {
         "rooms": rooms, "form": form, "searched": bool(request.GET),
     })
+
+
+def room_by_slug(request, slug):
+    room = get_object_or_404(Room, slug=slug)
+    return render(request, "rooms/room_detail.html", {
+        "room": room, "estimates": room.estimates.select_related("user"),
+    })
