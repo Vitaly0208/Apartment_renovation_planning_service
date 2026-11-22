@@ -1,8 +1,31 @@
 from django.db.models import F
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from django.views.decorators.http import require_http_methods
 
-from .forms import RoomSearchForm
+from .forms import RoomForm, RoomSearchForm
 from .models import Room
+
+
+@require_http_methods(["GET", "POST"])
+def room_create(request):
+    return room_form(request)
+
+
+@require_http_methods(["GET", "POST"])
+def room_edit(request, room_id):
+    return room_form(request, get_object_or_404(Room, pk=room_id))
+
+
+def room_form(request, room=None):
+    form = RoomForm(request.POST if request.method == "POST" else None,
+                    request.FILES if request.method == "POST" else None,
+                    instance=room)
+    if request.method == "POST" and form.is_valid():
+        room = form.save()
+        messages.success(request, "Помещение сохранено.")
+        return redirect(room.get_absolute_url())
+    return render(request, "rooms/room_form.html", {"form": form, "room": room})
 
 
 def room_queryset(request):

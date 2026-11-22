@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Сметы</h1>
+<p><a class="btn btn-primary" href="{% url 'estimates:estimate_create' %}">Создать смету</a></p>
 <form method="get">{{ form.as_p }}<button type="submit">Применить</button></form>
 <p>Всего смет: {{ page_obj.paginator.count }}</p>
 {% for estimate in estimates %}

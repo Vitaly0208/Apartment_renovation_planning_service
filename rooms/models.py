@@ -3,9 +3,12 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from uuid import uuid4
+from .validators import validate_image_size
 
 
 class Room(models.Model):
+    image = models.ImageField("Изображение", upload_to="rooms/%Y/%m/", blank=True,
+                              validators=[validate_image_size])
     name = models.CharField("Название", max_length=200)
     length = models.DecimalField("Длина, м", max_digits=9, decimal_places=2,
                                  validators=[MinValueValidator(0.01)])

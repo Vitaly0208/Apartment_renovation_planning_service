@@ -10,11 +10,10 @@
     <link rel="stylesheet" href="{% static 'homepage/css/style.css' %}">
 </head>
 <body>
-    <img src="{% static 'homepage/img/logo.png' %}"
-         alt="РемонтПлан" class="repair-logo">
     {% include "includes/navigation.html" %}
 
     <main class="container">
+        {% for message in messages %}<div class="alert alert-info" role="status">{{ message }}</div>{% endfor %}
         {% block content %}{% endblock %}
     </main>
 

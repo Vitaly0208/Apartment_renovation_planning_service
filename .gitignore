@@ -8,3 +8,5 @@ tmp/
 *.sqlite3
 *.sqlite3-journal
 *.sqlite-journal
+media/
+output/pr11/transfer-manifest.json

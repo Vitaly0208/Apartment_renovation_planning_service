@@ -1,4 +1,6 @@
 from django import forms
+from decimal import Decimal
+from django.utils import timezone
 
 from rooms.models import Room
 from .models import Estimate, User
@@ -46,4 +48,48 @@ class EstimateAdminForm(forms.ModelForm):
         works = data.get("works_cost")
         if materials is not None and works is not None:
             self.instance.total = materials + works
+        return data
+
+
+class EstimateForm(forms.ModelForm):
+    class Meta:
+        model = Estimate
+        fields = ("room", "user", "materials", "estimate_date", "status",
+                  "materials_cost", "works_cost", "note")
+        widgets = {
+            "estimate_date": forms.DateInput(
+                format="%Y-%m-%d", attrs={"type": "date"}),
+            "note": forms.Textarea(attrs={"rows": 4}),
+        }
+        help_texts = {
+            "estimate_date": "Дата составления сметы; прошедшая дата допустима.",
+            "materials_cost": "Сохранённая стоимость, без пересчёта по каталогу.",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = (
+                "form-select" if isinstance(field.widget, forms.Select)
+                else "form-control")
+
+    def clean_note(self):
+        return self.cleaned_data["note"].strip()
+
+    def clean_estimate_date(self):
+        value = self.cleaned_data.get("estimate_date")
+        if value and value > timezone.localdate():
+            raise forms.ValidationError(
+                "Дата составления сметы не может быть в будущем.")
+        return value
+
+    def clean(self):
+        data = super().clean()
+        materials, works = data.get("materials_cost"), data.get("works_cost")
+        if materials is not None and works is not None:
+            total = materials + works
+            if total > Decimal("999999999999.99"):
+                raise forms.ValidationError(
+                    "Итоговая сумма превышает допустимый предел.")
+            self.instance.total = total
         return data

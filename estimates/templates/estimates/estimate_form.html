@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{% if estimate %}Редактирование сметы{% else %}Новая смета{% endif %} — РемонтПлан{% endblock %}
+{% block content %}
+<h1>{% if estimate %}Редактирование сметы №{{ estimate.pk }}{% else %}Новая смета{% endif %}</h1>
+<p>Итог рассчитывается как сумма стоимости материалов и работ.</p>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <button class="btn btn-primary" type="submit">Сохранить смету</button>
+    <a class="btn btn-outline-secondary" href="{% url 'estimates:estimates_list' %}">К списку смет</a>
+</form>
+{% endblock %}

@@ -1,0 +1,120 @@
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe manage.py check
+System check identified no issues (0 silenced).
+
+Exit code: 0
+
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe manage.py makemigrations --check --dry-run
+No changes detected
+
+Exit code: 0
+
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe manage.py migrate --check
+
+Exit code: 0
+
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe manage.py showmigrations rooms estimates
+rooms
+ [X] 0001_initial
+ [X] 0002_pr10_room
+ [X] 0003_alter_room_options_room_floor_area_db_and_more
+ [X] 0004_room_image
+estimates
+ [X] 0001_initial
+ [X] 0002_alter_estimate_options_alter_material_options_and_more
+ [X] 0003_alter_user_name
+ [X] 0004_estimate_note
+
+Exit code: 0
+
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe -m pytest -v
+============================= test session starts =============================
+platform win32 -- Python 3.15.0, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service
+configfile: pytest.ini
+testpaths: tests
+collecting ... collected 41 items
+
+tests/test_estimates.py::test_estimate_creation PASSED                   [  2%]
+tests/test_estimates.py::test_estimate_budget_sufficient PASSED          [  4%]
+tests/test_estimates.py::test_estimate_budget_insufficient PASSED        [  7%]
+tests/test_estimates.py::test_estimate_str_contains_user_and_room PASSED [  9%]
+tests/test_estimates.py::test_estimate_to_data_stores_ids PASSED         [ 12%]
+tests/test_materials.py::test_material_creation PASSED                   [ 14%]
+tests/test_materials.py::test_material_quantity PASSED                   [ 17%]
+tests/test_materials.py::test_material_cost PASSED                       [ 19%]
+tests/test_orm.py::ORMTests::test_crud_and_protected_relations PASSED    [ 21%]
+tests/test_orm.py::ORMTests::test_invalid_parameters PASSED              [ 24%]
+tests/test_orm.py::ORMTests::test_pages_areas_and_related_data PASSED    [ 26%]
+tests/test_orm.py::ORMTests::test_search_filters_order_and_pagination PASSED [ 29%]
+tests/test_orm.py::ORMTests::test_statistics_includes_objects_without_estimates PASSED [ 31%]
+tests/test_orm.py::ImportTests::test_import_repeat_and_conflict_rollback PASSED [ 34%]
+tests/test_pr10.py::AdminTests::test_admin_create_update_delete_and_total PASSED [ 36%]
+tests/test_pr10.py::AdminTests::test_invalid_admin_input_does_not_write PASSED [ 39%]
+tests/test_pr10.py::AdminTests::test_lists_search_filters_and_inlines PASSED [ 41%]
+tests/test_pr10.py::AdminTests::test_permissions PASSED                  [ 43%]
+tests/test_pr10.py::AdminTests::test_related_queries_and_explain PASSED  [ 46%]
+tests/test_pr10.py::AdminTests::test_slug_generated_area_and_context PASSED [ 48%]
+tests/test_pr10.py::AdminTests::test_status_date_pagination_and_statistics PASSED [ 51%]
+tests/test_pr10.py::MigrationTests::test_pr9_data_survives_migration PASSED [ 53%]
+tests/test_pr11.py::FormTests::test_admin_upload_uses_same_image_validation PASSED [ 56%]
+tests/test_pr11.py::FormTests::test_cancel_post_only_preserves_data_and_is_repeatable PASSED [ 58%]
+tests/test_pr11.py::FormTests::test_create_calculates_total_and_saves_materials PASSED [ 60%]
+tests/test_pr11.py::FormTests::test_csrf_for_all_mutations PASSED        [ 63%]
+tests/test_pr11.py::FormTests::test_edit_updates_existing_row_and_m2m PASSED [ 65%]
+tests/test_pr11.py::FormTests::test_get_forms_initial_values_and_empty_post PASSED [ 68%]
+tests/test_pr11.py::FormTests::test_invalid_image_and_dimensions_do_not_write PASSED [ 70%]
+tests/test_pr11.py::FormTests::test_invalid_input_retains_values_and_does_not_write
+tests/test_pr11.py::FormTests::test_invalid_input_retains_values_and_does_not_write PASSED [ 73%]
+tests/test_pr11.py::FormTests::test_missing_objects_and_unsupported_methods PASSED [ 75%]
+tests/test_pr11.py::FormTests::test_note_is_escaped PASSED               [ 78%]
+tests/test_pr11.py::FormTests::test_past_optional_date_and_multiple_estimates_are_allowed PASSED [ 80%]
+tests/test_pr11.py::FormTests::test_room_image_upload_replace_clear_and_no_image PASSED [ 82%]
+tests/test_rooms.py::test_room_creation PASSED                           [ 85%]
+tests/test_rooms.py::test_room_floor_area PASSED                         [ 87%]
+tests/test_rooms.py::test_room_wall_area PASSED                          [ 90%]
+tests/test_rooms.py::test_room_str PASSED                                [ 92%]
+tests/test_users.py::test_user_creation PASSED                           [ 95%]
+tests/test_users.py::test_user_str PASSED                                [ 97%]
+tests/test_users.py::test_user_to_data_and_back PASSED                   [100%]
+
+=================== 41 passed, 11 subtests passed in 2.20s ====================
+
+Exit code: 0
+
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe -m flake8 .
+
+Exit code: 0
+
+> C:\Users\itachisolo\PycharmProjects\Apartment_renovation_planning_service\.venv\Scripts\python.exe -m pip check
+No broken requirements found.
+
+Exit code: 0
+
+> git diff --check
+
+Exit code: 0
+
+All previous subject data unchanged:
+{
+  "rooms_room": {
+    "rows": 3,
+    "previous_columns_unchanged": true
+  },
+  "estimates_user": {
+    "rows": 1,
+    "previous_columns_unchanged": true
+  },
+  "estimates_material": {
+    "rows": 2,
+    "previous_columns_unchanged": true
+  },
+  "estimates_estimate": {
+    "rows": 1,
+    "previous_columns_unchanged": true
+  },
+  "estimates_estimate_materials": {
+    "rows": 2,
+    "previous_columns_unchanged": true
+  }
+}

@@ -2,6 +2,7 @@ import math
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from .validators import validate_note
 
 
 class User(models.Model):
@@ -62,6 +63,9 @@ class EstimateQuerySet(models.QuerySet):
 
 
 class Estimate(models.Model):
+    note = models.TextField("Примечание", max_length=2000, blank=True,
+                            validators=[validate_note])
+
     class Status(models.TextChoices):
         DRAFT = "DRAFT", "Черновик"
         ACTIVE = "ACTIVE", "Согласована"

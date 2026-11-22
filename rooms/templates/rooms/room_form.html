@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Помещение — РемонтПлан{% endblock %}
+{% block content %}
+<h1>{% if room %}Редактирование: {{ room.name }}{% else %}Новое помещение{% endif %}</h1>
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <button class="btn btn-primary" type="submit">Сохранить помещение</button>
+    <a class="btn btn-outline-secondary" href="{% url 'rooms:rooms_list' %}">К списку помещений</a>
+</form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{
+  "rooms_room": {
+    "rows": 3,
+    "previous_columns_unchanged": true
+  },
+  "estimates_user": {
+    "rows": 1,
+    "previous_columns_unchanged": true
+  },
+  "estimates_material": {
+    "rows": 2,
+    "previous_columns_unchanged": true
+  },
+  "estimates_estimate": {
+    "rows": 1,
+    "previous_columns_unchanged": true
+  },
+  "estimates_estimate_materials": {
+    "rows": 2,
+    "previous_columns_unchanged": true
+  }
+}

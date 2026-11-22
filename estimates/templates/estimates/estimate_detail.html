@@ -9,6 +9,14 @@
 <div class="card">
     <div class="card-body">
         <h1 class="card-title">Смета №{{ estimate.id }}</h1>
+        <a class="btn btn-primary" href="{% url 'estimates:estimate_edit' estimate.pk %}">Редактировать смету</a>
+        {% if estimate.status != 'CANCELLED' %}
+        <form method="post" action="{% url 'estimates:estimate_cancel' estimate.pk %}" class="my-3">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger" type="submit">Отменить смету</button>
+        </form>
+        {% endif %}
+        {% if estimate.note %}<p>Примечание: {{ estimate.note|linebreaksbr }}</p>{% endif %}
         <p>Статус: {{ estimate.get_status_display }}.
         Дата сметы: {{ estimate.estimate_date|default_if_none:"не указана" }}.</p>
         <p class="card-text"><strong>Заказчик:</strong> {{ estimate.user.name }}</p>

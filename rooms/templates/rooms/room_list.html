@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Помещения</h1>
+<p><a class="btn btn-primary" href="{% url 'rooms:room_create' %}">Добавить помещение</a></p>
 <form method="get">{{ form.as_p }}<button type="submit">Найти</button></form>
 <p>Всего помещений: {{ rooms|length }}</p>
 

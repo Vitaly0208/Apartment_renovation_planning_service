@@ -1,10 +1,47 @@
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count, F, Max, Min, Q, Sum
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from django.db import transaction
+from django.views.decorators.http import require_http_methods, require_POST
 
 from rooms.models import Room
-from .forms import EstimateFilterForm
+from .forms import EstimateFilterForm, EstimateForm
 from .models import Estimate, Material, User
+
+
+@require_http_methods(["GET", "POST"])
+def estimate_create(request):
+    form = EstimateForm(request.POST if request.method == "POST" else None)
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            estimate = form.save()
+        messages.success(request, "Смета создана.")
+        return redirect("estimates:estimate_detail", estimate_id=estimate.pk)
+    return render(request, "estimates/estimate_form.html", {"form": form})
+
+
+@require_http_methods(["GET", "POST"])
+def estimate_edit(request, estimate_id):
+    estimate = get_object_or_404(Estimate, pk=estimate_id)
+    form = EstimateForm(request.POST if request.method == "POST" else None,
+                        instance=estimate)
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            form.save()
+        messages.success(request, "Смета обновлена.")
+        return redirect("estimates:estimate_detail", estimate_id=estimate.pk)
+    return render(request, "estimates/estimate_form.html", {
+        "form": form, "estimate": estimate,
+    })
+
+
+@require_POST
+def estimate_cancel(request, estimate_id):
+    estimate = get_object_or_404(Estimate, pk=estimate_id)
+    Estimate.objects.filter(pk=estimate.pk).update(status=Estimate.Status.CANCELLED)
+    messages.success(request, "Смета отменена. Данные и состав материалов сохранены.")
+    return redirect("estimates:estimate_detail", estimate_id=estimate.pk)
 
 
 def estimates_list(request):
